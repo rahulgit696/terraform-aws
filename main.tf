@@ -13,6 +13,8 @@ terraform {
 provider "aws" {
   profile = "default"
   region  = "us-west-2"
+  access_key = "AKIAV65TQWZZYEK7C5S7"
+  secret_key = "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"
 }
 
 data "aws_ami" "ubuntu" {
@@ -72,7 +74,7 @@ resource "aws_instance" "jenkins" {
   ami             = data.aws_ami.ubuntu.id
   instance_type   = "t2.micro"
   security_groups = [aws_security_group.web_traffic.name]
-  key_name        = "jenkins-key-pair"
+  key_name        = "terraform-key-pair"
 
   provisioner "remote-exec" {
     inline = [
@@ -94,7 +96,7 @@ resource "aws_instance" "jenkins" {
     type        = "ssh"
     host        = self.public_ip
     user        = "ubuntu"
-    private_key = file("./jenkins-key-pair.pem")
+    private_key = file("/home/rahul/terraform-project/terraform-aws/terraform-key-pair.pem")
   }
   tags = {
     "Name"      = "Jenkins_Server"
